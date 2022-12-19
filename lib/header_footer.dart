@@ -39,6 +39,38 @@ Widget header() {
   );
 }
 
+Widget registerHeader(String accountType) {
+
+  return Container(
+    height: 200, width: double.infinity,
+    child: Column(
+        children: [
+          Image.asset('assets/images/keypowerlogo.png', fit: BoxFit.fitWidth,),
+          Container(
+              height: 60, width: double.infinity,
+              color: const Color.fromRGBO(48, 153, 117, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$accountType',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    const Text(
+                      'Account Registration',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
+                ),
+              )
+          )
+        ]
+    ),
+  );
+}
+
 Widget footer(BuildContext context) {
   return Container(
     height: 50, width: double.infinity,

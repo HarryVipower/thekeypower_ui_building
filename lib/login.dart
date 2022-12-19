@@ -9,6 +9,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:test_qr_code/qr_code_handling.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
+import 'package:test_qr_code/register.dart';
 
 import 'header_footer.dart';
 import 'homepage.dart';
@@ -43,6 +44,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       children: [
         TextFormField(
           controller: emailTextController,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintStyle: headerStyle,
             labelStyle: headerStyle,
@@ -71,6 +73,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           onPressed: () {
             //Deal with password reset for forgotten passwords
             showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (BuildContext context) {
                 return forgotPasswordAlert();
@@ -99,6 +102,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         TextButton(
           onPressed: () {
             //Navigate to account registration, first prompt user to choose to register as a manager or a regular user
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) {
+                return registerSelectDialog();
+              }
+            );
           },
           child: const Text('Don\'t have an account yet?\nClick here to register!', style: TextStyle(color: Colors.black38), textAlign: TextAlign.center,),
         ),
@@ -107,6 +117,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           onPressed: () {
             //Display information on how to register for an account
             showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (BuildContext context) {
                 return infoAlert();
@@ -143,6 +154,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       content: const Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
           'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
           'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', textAlign: TextAlign.center,),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Okay', style: TextStyle(color: appColour()),),
+        )
+      ],
     );
   }
 
@@ -161,7 +180,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           children: [
             TextButton(
               onPressed: () {
-
+                Navigator.pop(context);
               },
               child: Text('Cancel', style: TextStyle(color: appColour()),),
             ),
@@ -180,22 +199,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   AlertDialog registerSelectDialog() {
     return AlertDialog(
       title: Text('Select Account Type', style: TextStyle(color: appColour()), textAlign: TextAlign.center,),
-      content: Column(
-        children: [
-          const Text('Select which type of account to register for:', textAlign: TextAlign.center,),
-          DropdownButton(
-            items: const [
-              DropdownMenuItem(value: 'User',child: Text('User'),),
-              DropdownMenuItem(value: 'Manager',child: Text('Manager'),),
-            ],
-            value: registerDropdownValue,
-            onChanged: (var value) {
-              setState(() {
-                registerDropdownValue = value!;
-              });
-            },
-          )
-        ],
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            const Text('Select which type of account to register for:', textAlign: TextAlign.center,),
+            DropdownButtonFormField(
+              items: const [
+                DropdownMenuItem(value: 'User',child: Text('User'),),
+                DropdownMenuItem(value: 'Manager',child: Text('Manager'),),
+              ],
+              value: registerDropdownValue,
+              onChanged: (String? value) {
+                setState(() {
+                  registerDropdownValue = value!;
+                });
+              },
+            )
+          ],
+        ),
       ),
       actions: [
         Row(
@@ -203,15 +225,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           children: [
             TextButton(
               onPressed: () {
-                //Continue to registration
+                //Cancel
+                Navigator.pop(context);
               },
               child: Text('Cancel', style: TextStyle(color: appColour()),),
             ),
             TextButton(
               onPressed: () {
                 //Continue to registration
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterPage(title: 'Title', accountType: registerDropdownValue)),
+                );
               },
-
+              child: Text('Confirm', style: TextStyle(color: appColour()),),
             )
           ],
         )

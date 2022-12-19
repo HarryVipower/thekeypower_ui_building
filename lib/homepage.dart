@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:test_qr_code/outstanding_keys.dart';
 import 'package:test_qr_code/qr_code_handling.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
 
@@ -148,7 +149,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             );
           }
           else if (destination == 'outstandingkeys') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Going to outstanding keys!'),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OutstandingKeys(title: 'Title')),
+            );
           }
           else if (destination == 'returnkey') {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Going to return key'),));
