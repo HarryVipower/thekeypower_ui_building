@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:test_qr_code/keyloanhistory.dart';
 import 'package:test_qr_code/outstanding_keys.dart';
 import 'package:test_qr_code/qr_code_handling.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
@@ -158,7 +159,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Going to return key'),));
           }
           else if (destination == 'keyloanhistory') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Going to key loan history'),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const KeyLoanHistory(title: 'Title')),
+            );
           }
           return false;
         },

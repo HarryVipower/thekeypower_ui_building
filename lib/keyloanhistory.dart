@@ -15,15 +15,15 @@ import 'header_footer.dart';
 import 'homepage.dart';
 import 'login.dart';
 
-class OutstandingKeys extends StatefulWidget {
-  const OutstandingKeys({super.key, required this.title,});
+class KeyLoanHistory extends StatefulWidget {
+  const KeyLoanHistory({super.key, required this.title,});
   final String title;
 
   @override
-  State<OutstandingKeys> createState() => _OutstandingKeysState();
+  State<KeyLoanHistory> createState() => _KeyLoanHistoryState();
 }
 
-class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProviderStateMixin {
+class _KeyLoanHistoryState extends State<KeyLoanHistory> with SingleTickerProviderStateMixin {
   GlobalKey key = GlobalKey();
   TextEditingController searchController = TextEditingController();
   late ScrollController scrollController;
@@ -39,6 +39,7 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
     keyTag: 'Riser Key',
     keyNumber: 24,
     issueTime: DateTime.now(),
+    returnTime: DateTime.utc(2022, 1, 1, 1, 1, 1, 1),
   );
 
   Record testRecord2 = Record(
@@ -50,17 +51,19 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
     keyTag: 'Lower Ground Fusebox',
     keyNumber: 12,
     issueTime: DateTime.now(),
+    returnTime: DateTime.utc(2022, 1, 1, 1, 1, 1, 1),
   );
 
   Record testRecord3 = Record(
-    keyCode: '109DA2poadOJF',
-    visitorName: 'Phillip Monk',
-    visitorEmail: 'phill@vipower.co.uk',
-    visitorCompany: 'Vipower Limited',
-    visitorPhoneNo: '10048204940',
-    keyTag: '2nd Floor Bathroom',
-    keyNumber: 01,
-    issueTime: DateTime.now()
+      keyCode: '109DA2poadOJF',
+      visitorName: 'Phillip Monk',
+      visitorEmail: 'phill@vipower.co.uk',
+      visitorCompany: 'Vipower Limited',
+      visitorPhoneNo: '10048204940',
+      keyTag: '2nd Floor Bathroom',
+      keyNumber: 01,
+      issueTime: DateTime.now(),
+      returnTime: DateTime.utc(2022, 1, 1, 1, 1, 1, 1),
   );
 
   List<Record> allRecords = [];
@@ -123,6 +126,7 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
 
 
   Widget displayCard(Record record) {
+    int timeHeld = record.issueTime!.difference(record.returnTime!).inSeconds;
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -153,12 +157,12 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
                     padding: const EdgeInsets.all(12.0),
                     child: Align(
                         alignment: Alignment.center, child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(flex: 1, child: Text(record.keyTag!, style: const TextStyle(color: Colors.white, fontSize: 16), overflow: TextOverflow.ellipsis,)),
-                            Flexible(flex:1, child: Text(record.visitorName!, style: const TextStyle(color: Colors.white, fontSize: 16), overflow: TextOverflow.ellipsis,),)
-                          ],
-                        )
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(flex: 1, child: Text(record.keyTag!, style: const TextStyle(color: Colors.white, fontSize: 16), overflow: TextOverflow.ellipsis,)),
+                        Flexible(flex:1, child: Text(record.visitorName!, style: const TextStyle(color: Colors.white, fontSize: 16), overflow: TextOverflow.ellipsis,),)
+                      ],
+                    )
                     ),
                   ),
                 ),
@@ -184,7 +188,10 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
                       Text(record.visitorPhoneNo!, style: contentStyle, overflow: TextOverflow.ellipsis,),
                       const SizedBox(height: 8.0,),
                       Text('Company:', style: headerStyle, overflow: TextOverflow.ellipsis,),
-                      Text(record.visitorCompany!, style: contentStyle, overflow: TextOverflow.ellipsis,)
+                      Text(record.visitorCompany!, style: contentStyle, overflow: TextOverflow.ellipsis,),
+                      const SizedBox(height: 8.0),
+                      Text('Number:', style: headerStyle, overflow: TextOverflow.ellipsis,),
+                      Text(record.keyNumber!.toString(), style: contentStyle, overflow: TextOverflow.ellipsis,)
                     ],
                   ),
                 ),
@@ -195,11 +202,14 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Number:', style: headerStyle, overflow: TextOverflow.ellipsis,),
-                      Text(record.keyNumber!.toString(), style: contentStyle, overflow: TextOverflow.ellipsis,),
-                      const SizedBox(height: 8.0,),
                       Text('Key Issued:', style: headerStyle, overflow: TextOverflow.ellipsis,),
                       Text(record.issueTime!.toString(), style: contentStyle, overflow: TextOverflow.clip,),
+                      const SizedBox(height: 8.0,),
+                      Text('Key Returned:', style: headerStyle, overflow: TextOverflow.ellipsis),
+                      Text(record.returnTime!.toString(), style: contentStyle, overflow: TextOverflow.clip,),
+                      const SizedBox(height: 8.0),
+                      Text('Time Held:', style: headerStyle, overflow: TextOverflow.ellipsis),
+                      Text(timeHeld.toString(), style: contentStyle, overflow: TextOverflow.ellipsis,),
                     ],
                   ),
                 )
@@ -279,16 +289,16 @@ class _OutstandingKeysState extends State<OutstandingKeys> with SingleTickerProv
           children: [
             header(),
             Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [
-                  Text('Now viewing outstanding keys at $buildingName. There are ${allRecords.length} keys awaiting return.', style: const TextStyle(color: Colors.black38), textAlign: TextAlign.center,),
-                  searchBar(),
-                  const Divider(),
-                  const SizedBox(height: 12.0,),
-                  buildCardList(searchResults),
-                ],
-              )
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Text('Now viewing outstanding keys at $buildingName. There are ${allRecords.length} keys awaiting return.', style: const TextStyle(color: Colors.black38), textAlign: TextAlign.center,),
+                    searchBar(),
+                    const Divider(),
+                    const SizedBox(height: 12.0,),
+                    buildCardList(searchResults),
+                  ],
+                )
             )
           ],
         ),

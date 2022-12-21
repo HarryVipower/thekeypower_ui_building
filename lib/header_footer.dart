@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_qr_code/genqr.dart';
+import 'package:test_qr_code/keyloanhistory.dart';
+import 'package:test_qr_code/outstanding_keys.dart';
 import 'package:test_qr_code/profile.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
 import 'dart:math' as m;
 
 import 'homepage.dart';
+import 'login.dart';
+
+//Get this building name from the firestore at login
+String buildingName = '6 Gracechurch Street';
 
 Widget header() {
 
@@ -21,14 +27,14 @@ Widget header() {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Building Name:',
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     Text(
-                      '6 Gracechurch Street',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      buildingName,
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ],
                 ),
@@ -80,7 +86,10 @@ Widget footer(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(icon: const Icon(Icons.logout, size: 30,), color: Colors.white, onPressed: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage(title: 'Title')),
+          );
         },),
         IconButton(icon: const Icon(Icons.home, size: 30,), color: Colors.white, onPressed: () {
           Navigator.push(
@@ -167,7 +176,10 @@ Widget drawer(BuildContext context) {
           leading: const Icon(Icons.list_alt, color: Colors.black,),
           title: const Text('Outstanding Keys'),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Outstanding keys!'),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OutstandingKeys(title: 'Title')),
+            );
           },
         ),
         const Divider(),
@@ -183,7 +195,10 @@ Widget drawer(BuildContext context) {
           leading: const Icon(Icons.list_alt, color: Colors.black,),
           title: const Text('Key Loan History'),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Key Loan History!'),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const KeyLoanHistory(title: 'Title')),
+            );
           },
         ),
         const Divider(),
@@ -213,4 +228,8 @@ String generateRandomString() {
 TextStyle headerStyle = const TextStyle(
   color: Color.fromRGBO(48, 153, 117, 1),
   fontSize: 12,
+);
+TextStyle contentStyle = const TextStyle(
+  color: Colors.black38,
+  fontSize: 14,
 );
