@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -23,6 +24,11 @@ class QRView extends StatefulWidget {
 
 class _QRViewState extends State<QRView> with TickerProviderStateMixin {
   TextEditingController textController = TextEditingController();
+  TextEditingController visitorNameController = TextEditingController();
+  TextEditingController visitorEmailController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+
   String _dataValue = '';
   String keyScanHead = '';
   GlobalKey key = GlobalKey();
@@ -224,6 +230,142 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
   }
   
   Widget scanKey2Content() {
+    //This widget contains the form for adding details to a scanned key
+
+    Widget topText() {
+      return Container(
+        margin: const EdgeInsets.only(left: 12.0, right: 12.0),
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('You are attempting to issue a $_dataValue key to a visitor at $buildingName.', style: contentStyle, textAlign: TextAlign.center,),
+            const SizedBox(height: 12.0,),
+            Text('Please fill in the below fields with details from the visitor.', style: contentStyle, textAlign: TextAlign.center,),
+            const Divider(),
+          ],
+        ),
+      );
+    }
+
+    Widget textFieldsForms() {
+      return Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: visitorNameController,
+              obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: headerStyle,
+                labelStyle: headerStyle,
+                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                labelText: 'Visitor Name',
+              ),
+            ),
+            const SizedBox(height: 8.0,),
+            TextFormField(
+              controller: visitorEmailController,
+              obscureText: true,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                hintStyle: headerStyle,
+                labelStyle: headerStyle,
+                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                labelText: 'Email Address',
+              ),
+            ),
+            const SizedBox(height: 8.0,),
+            TextFormField(
+              controller: phoneNoController,
+              obscureText: true,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                hintStyle: headerStyle,
+                labelStyle: headerStyle,
+                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                labelText: 'Phone Number',
+              ),
+            ),
+            const SizedBox(height: 8.0,),
+            TextFormField(
+              controller: companyNameController,
+              obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: headerStyle,
+                labelStyle: headerStyle,
+                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                labelText: 'Company Name',
+              ),
+            ),
+            const SizedBox(height: 8.0,),
+          ],
+        ),
+      );
+    }
+    
+    Widget actionButtons() {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 24.0, left: 48.0, right: 48.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: 'If the visitor has a personal details QR code, press ',
+                style: contentStyle,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'here ',
+                    style: TextStyle(color: appColour()),
+                    recognizer: TapGestureRecognizer()..onTap = () {
+                      log('Tapped!');
+                    }
+                  ),
+                  TextSpan(
+                    text: 'to scan.',
+                    style: contentStyle,
+                  )
+                ]
+              ),
+            ),
+            const SizedBox(height: 24.0,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new),
+                  onPressed: () {
+                    log('going back');
+                    setState(() {
+                      scanned = !scanned;
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    log('Issuing the key');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(48, 153, 117, 1),
+                    shape: const StadiumBorder(),
+                  ),
+                  child: const Text(
+                    'Issue Key',
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+
     return AnimatedOpacity(
       opacity: scanned ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 500),
@@ -231,17 +373,20 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
           child: Container(
             child: Column(
               children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      scanned = !scanned;
-                    });
-                  },
-                  child: const Text('Press to go back'),
-                ),
-                const Divider(),
-                Text('Scanned LAT: ${currentPosition?.latitude ?? ''}'),
-                Text('Scanned LON: ${currentPosition?.longitude ?? ''}'),
+                //TextButton(
+                //  onPressed: () {
+                //    setState(() {
+                //      scanned = !scanned;
+                //    });
+                //  },
+                //  child: const Text('Press to go back'),
+                //),
+                //const Divider(),
+                //Text('Scanned LAT: ${currentPosition?.latitude ?? ''}'),
+                //Text('Scanned LON: ${currentPosition?.longitude ?? ''}'),
+                topText(),
+                textFieldsForms(),
+                actionButtons()
               ],
             ),
           ),

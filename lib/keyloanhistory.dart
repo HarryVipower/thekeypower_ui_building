@@ -292,7 +292,7 @@ class _KeyLoanHistoryState extends State<KeyLoanHistory> with SingleTickerProvid
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
-                    Text('Now viewing outstanding keys at $buildingName. There are ${allRecords.length} keys awaiting return.', style: const TextStyle(color: Colors.black38), textAlign: TextAlign.center,),
+                    Text('Now viewing outstanding keys at $buildingName. There are ${allRecords.length} records of returned keys.', style: const TextStyle(color: Colors.black38), textAlign: TextAlign.center,),
                     searchBar(),
                     const Divider(),
                     const SizedBox(height: 12.0,),
