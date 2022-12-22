@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -16,6 +15,7 @@ import 'header_footer.dart';
 
 class QRView extends StatefulWidget {
   const QRView({super.key, required this.title});
+
   final String title;
 
   @override
@@ -37,22 +37,22 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
   Position? currentPosition;
   late Widget currentWidget;
 
+  @override
   void initState() {
     super.initState();
     currentWidget = scanKey1Content();
   }
 
-  Widget qr_code_scanner() {
-
+  Widget qrCodeScanner() {
     return SizedBox(
-      height: 300, width: 200,
+      height: 300,
+      width: 200,
       child: MobileScanner(
         allowDuplicates: false,
         onDetect: (barcode, args) {
           if (barcode.rawValue == null) {
             log('Failed to scan qr code.');
-          }
-          else {
+          } else {
             final String code = barcode.rawValue!;
             log('Found QR code: $code');
             setState(() {
@@ -63,16 +63,14 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
       ),
     );
   }
-  
-
 
   Widget nextIconButton() {
-
     Widget keyScanned = IconButton(
       icon: const Icon(Icons.arrow_right),
       iconSize: 50,
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Next Page!')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Next Page!')));
         setState(() {
           scanned = !scanned;
         });
@@ -83,8 +81,7 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
 
     if (_dataValue == '') {
       return keyNotScanned;
-    }
-    else {
+    } else {
       return keyScanned;
     }
   }
@@ -96,8 +93,8 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Location services are disabled, please enable these services.')
-      ));
+          content: Text(
+              'Location services are disabled, please enable these services.')));
       return false;
     }
     permission = await Geolocator.checkPermission();
@@ -110,10 +107,10 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
         return false;
       }
     }
-    if(permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Location permissions are denied permanently and cannot be requested.')
-      ));
+          content: Text(
+              'Location permissions are denied permanently and cannot be requested.')));
       return false;
     }
     return true;
@@ -142,14 +139,16 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
         children: [
           Container(
             padding: const EdgeInsets.only(left: 24, right: 24),
-            height: 300, width: 324,
+            height: 300,
+            width: 324,
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(150))),
             child: MobileScanner(
               allowDuplicates: false,
               onDetect: (barcode, args) async {
                 if (barcode.rawValue == null) {
                   log('Failed to scan qr code.');
-                }
-                else {
+                } else {
                   final String code = barcode.rawValue!;
                   log('Found QR code: $code');
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -158,7 +157,9 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => const Center(child: CircularProgressIndicator(),),
+                    builder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
 
                   //Get the current position of the key scan action
@@ -169,7 +170,8 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
 
                   Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Scanned code: $code')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Scanned code: $code')));
 
                   setState(() {
                     _dataValue = code;
@@ -179,7 +181,9 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               },
             ),
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(
+            height: 12,
+          ),
           const Divider(),
           const SizedBox(height: 12),
           const Padding(
@@ -189,7 +193,9 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(
+            height: 12,
+          ),
           Row(
             children: [
               Expanded(
@@ -228,7 +234,7 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
       ),
     );
   }
-  
+
   Widget scanKey2Content() {
     //This widget contains the form for adding details to a scanned key
 
@@ -239,9 +245,19 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('You are attempting to issue a $_dataValue key to a visitor at $buildingName.', style: contentStyle, textAlign: TextAlign.center,),
-            const SizedBox(height: 12.0,),
-            Text('Please fill in the below fields with details from the visitor.', style: contentStyle, textAlign: TextAlign.center,),
+            Text(
+              'You are attempting to issue a $_dataValue key to a visitor at $buildingName.',
+              style: contentStyle,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 12.0,
+            ),
+            Text(
+              'Please fill in the below fields with details from the visitor.',
+              style: contentStyle,
+              textAlign: TextAlign.center,
+            ),
             const Divider(),
           ],
         ),
@@ -261,11 +277,15 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               decoration: InputDecoration(
                 hintStyle: headerStyle,
                 labelStyle: headerStyle,
-                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                border: const UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
                 labelText: 'Visitor Name',
               ),
             ),
-            const SizedBox(height: 8.0,),
+            const SizedBox(
+              height: 8.0,
+            ),
             TextFormField(
               controller: visitorEmailController,
               obscureText: true,
@@ -273,11 +293,15 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               decoration: InputDecoration(
                 hintStyle: headerStyle,
                 labelStyle: headerStyle,
-                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                border: const UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
                 labelText: 'Email Address',
               ),
             ),
-            const SizedBox(height: 8.0,),
+            const SizedBox(
+              height: 8.0,
+            ),
             TextFormField(
               controller: phoneNoController,
               obscureText: true,
@@ -285,11 +309,15 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               decoration: InputDecoration(
                 hintStyle: headerStyle,
                 labelStyle: headerStyle,
-                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                border: const UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
                 labelText: 'Phone Number',
               ),
             ),
-            const SizedBox(height: 8.0,),
+            const SizedBox(
+              height: 8.0,
+            ),
             TextFormField(
               controller: companyNameController,
               obscureText: true,
@@ -297,16 +325,20 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               decoration: InputDecoration(
                 hintStyle: headerStyle,
                 labelStyle: headerStyle,
-                border: const UnderlineInputBorder(borderSide: BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
+                border: const UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromRGBO(48, 153, 117, 1))),
                 labelText: 'Company Name',
               ),
             ),
-            const SizedBox(height: 8.0,),
+            const SizedBox(
+              height: 8.0,
+            ),
           ],
         ),
       );
     }
-    
+
     Widget actionButtons() {
       return Padding(
         padding: const EdgeInsets.only(bottom: 24.0, left: 48.0, right: 48.0),
@@ -316,24 +348,25 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                text: 'If the visitor has a personal details QR code, press ',
-                style: contentStyle,
-                children: <TextSpan>[
-                  TextSpan(
-                    text: 'here ',
-                    style: TextStyle(color: appColour()),
-                    recognizer: TapGestureRecognizer()..onTap = () {
-                      log('Tapped!');
-                    }
-                  ),
-                  TextSpan(
-                    text: 'to scan.',
-                    style: contentStyle,
-                  )
-                ]
-              ),
+                  text: 'If the visitor has a personal details QR code, press ',
+                  style: contentStyle,
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'here ',
+                        style: TextStyle(color: appColour()),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            log('Tapped!');
+                          }),
+                    TextSpan(
+                      text: 'to scan.',
+                      style: contentStyle,
+                    )
+                  ]),
             ),
-            const SizedBox(height: 24.0,),
+            const SizedBox(
+              height: 24.0,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -365,9 +398,8 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
       );
     }
 
-
     return AnimatedOpacity(
-      opacity: scanned ? 1.0 : 0.0,
+        opacity: scanned ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 500),
         child: Center(
           child: Container(
@@ -390,8 +422,7 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 
   Widget viewDecider() {
@@ -402,10 +433,7 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
     //USE ANIMATEDSWITCHER WIDGET TO SELECT BETWEEN
 
     return Stack(
-      children: [
-        scanKey1Content(),
-        scanKey2Content()
-      ],
+      children: [scanKey1Content(), scanKey2Content()],
     );
 
     //return AnimatedSwitcher(
@@ -427,13 +455,13 @@ class _QRViewState extends State<QRView> with TickerProviderStateMixin {
       backgroundColor: const Color.fromRGBO(234, 244, 255, 1),
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: footer(context),
-      body: ListView(
-        children: [
-          header(),
-          const SizedBox(height: 12,),
-          viewDecider(),
-        ]
-      ),
+      body: ListView(children: [
+        header(),
+        const SizedBox(
+          height: 12,
+        ),
+        viewDecider(),
+      ]),
     );
   }
 }

@@ -70,6 +70,7 @@ flutter:
     - assets/images/keyloan.jpg
     - assets/images/outstanding.jpg
     - assets/images/return.jpg
+    - assets/images/qr2.bmp
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -11,6 +11,7 @@ import 'package:test_qr_code/keyloanhistory.dart';
 import 'package:test_qr_code/outstanding_keys.dart';
 import 'package:test_qr_code/qr_code_handling.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
+import 'package:test_qr_code/return_key.dart';
 
 import 'header_footer.dart';
 
@@ -156,7 +157,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             );
           }
           else if (destination == 'returnkey') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Going to return key'),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReturnKeyPage(title: 'Title')),
+            );
           }
           else if (destination == 'keyloanhistory') {
             Navigator.push(

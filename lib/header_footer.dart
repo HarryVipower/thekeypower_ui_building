@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_qr_code/genqr.dart';
+import 'package:test_qr_code/key_registry.dart';
 import 'package:test_qr_code/keyloanhistory.dart';
 import 'package:test_qr_code/outstanding_keys.dart';
 import 'package:test_qr_code/profile.dart';
 import 'package:test_qr_code/qr_view_in_window.dart';
+import 'package:test_qr_code/return_key.dart';
 import 'dart:math' as m;
 
 import 'homepage.dart';
@@ -157,7 +159,10 @@ Widget drawer(BuildContext context) {
           leading: const Icon(Icons.key, color: Colors.black,),
           title: const Text('Return Key'),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Return key!')));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReturnKeyPage(title: 'Title')),
+            );
           },
         ),
         const Divider(),
@@ -187,7 +192,10 @@ Widget drawer(BuildContext context) {
           leading: const Icon(Icons.list_alt, color: Colors.black,),
           title: const Text('Key Registry'),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Key Registry!')));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const KeyRegistryPage(title: 'Title')),
+            );
           },
         ),
         const Divider(),
